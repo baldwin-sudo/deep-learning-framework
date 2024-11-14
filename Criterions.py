@@ -8,7 +8,14 @@ class Criterion :
     def step_d_error(self,y,y_pred):
         pass
     
-    
+"""
+- Generalized error computation for a batch: 
+    np.mean(error) ensures that whether the batch size is 1 or greater, 
+    the error is calculated correctly by averaging the errors of all samples in the batch.
+- Special case for batch size = 1: 
+    When the batch size is 1, np.mean(error) simply returns the error for that single sample.
+"""
+
 class MSE(Criterion):
     def __init__(self) -> None:
         super().__init__()

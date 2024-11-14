@@ -60,8 +60,8 @@ def test():
     
     # Test with MiniBatch_Loader and MBGD optimizer
     print("\nTesting with MiniBatch_Loader (mini-batch iteration) and MBGD optimizer:")
-    minibatch_loader = MiniBatch_Loader((X, Y), batch_size=3, shuffle=True)
-    mbgd_optimizer = MBGD(learning_rate=0.01, neural_network=network, batch_size=3)
+    minibatch_loader = MiniBatch_Loader((X, Y), batch_size=2, shuffle=True)
+    mbgd_optimizer = MBGD(learning_rate=0.01, neural_network=network, batch_size=2)
     train_with_dataloader(minibatch_loader, network, mbgd_optimizer, criterion)
     
     network.reset_network()
@@ -77,7 +77,7 @@ def test():
     # Test with Batch_Loader and Batch_GD optimizer
     print("\nTesting with Batch_Loader (full-batch iteration) and Batch_GD optimizer:")
     batch_loader = Batch_Loader((X, Y), shuffle=True)
-    batch_gd_optimizer = Batch_GD(learning_rate=0.1, neural_network=network, len_data=len(X))
-    train_with_dataloader(batch_loader, network, batch_gd_optimizer, criterion)
+    batch_gd_optimizer = Batch_GD(learning_rate=0.001, neural_network=network, len_data=len(X))
+    train_with_dataloader(batch_loader, network, batch_gd_optimizer, criterion,epochs=10000)
 
 test()

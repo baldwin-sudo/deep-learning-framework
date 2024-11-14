@@ -22,8 +22,12 @@ class Batch_GD(Optimizer):
         """Updates weights for a full batch of training examples."""
         layers_reversed = list(reversed(self.nn.layers))
         for layer in layers_reversed:
-            grad = layer.backward(batch_error, self.lr)
+            grad,dW,dB = layer.backward(batch_error)
+            layer.weights -=dW *self.lr
+            layer.bias -=dB *self.lr
             batch_error = grad
+
+
 
 
 class SGD(Optimizer):
@@ -31,12 +35,14 @@ class SGD(Optimizer):
     def __init__(self, learning_rate, neural_network) -> None:
         super().__init__(learning_rate, neural_network)
 
-    def step(self, error, step=None):
+    def step(self,batch_error, step=None):
         # In SGD, we update the weights for each individual data point.
         layers_reversed = list(reversed(self.nn.layers))
         for layer in layers_reversed:
-            grad = layer.backward(error, self.lr)
-            error = grad
+            grad,dW,dB = layer.backward(batch_error)
+            layer.weights -=dW *self.lr
+            layer.bias -=dB *self.lr
+            batch_error = grad
 
 
 class MBGD(Optimizer):
@@ -44,10 +50,14 @@ class MBGD(Optimizer):
     def __init__(self, learning_rate, neural_network, batch_size) -> None:
         super().__init__(learning_rate, neural_network, batch_size)
 
-    def step(self, error, step=None):
+    def step(self, batch_error, step=None):
         # In Mini-Batch GD, we update weights after a mini-batch is processed.
         if step is None or step % self.batch_size == 0:
             layers_reversed = list(reversed(self.nn.layers))
             for layer in layers_reversed:
-                grad = layer.backward(error, self.lr)
-                error = grad
+                grad,dW,dB = layer.backward(batch_error)
+                layer.weights -=dW *self.lr
+                layer.bias -=dB *self.lr
+                batch_error = grad
+
+

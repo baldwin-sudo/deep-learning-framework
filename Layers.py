@@ -38,7 +38,7 @@ class Dense(Layer) :
         #post-activation
         output= self.activation(self.z)
         return output
-    def backward(self,dA,learning_rate):
+    def backward(self,dA):
         """
         Backpropagate the error from the next layer (dA) to update the weights and biases.
         dA is the gradient of the loss with respect to the output activation (a) of next layer.
@@ -54,8 +54,8 @@ class Dense(Layer) :
         dX = np.dot(dz,self.weights)  
         
         # update weights
-        self.weights-=learning_rate*dW
-        self.bias -=learning_rate*dB
+        # self.weights-=learning_rate*dW
+        # self.bias -=learning_rate*dB
         return dX,dW,dB
 
 if __name__=="__main__":
