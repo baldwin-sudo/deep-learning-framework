@@ -1,10 +1,6 @@
-Sure! Below is the documentation in markdown format for the provided code.
+# Deep learning Framework from scratch :
 
----
-
-# Neural Network Training with DataLoader and Optimizers
-
-This repository demonstrates a simple implementation of a neural network with support for various data loading strategies and optimization techniques. The focus is on implementing different gradient descent algorithms such as **Batch Gradient Descent (BGD)**, **Stochastic Gradient Descent (SGD)**, and **Mini-Batch Gradient Descent (MBGD)**. Additionally, different types of data loaders (for different batch sizes) are included, such as **SimpleLoader**, **MiniBatch_Loader**, and **Batch_Loader**.
+This repository demonstrates a simple implementation of a neural network with support for various data loading strategies and optimization techniques. The focus is on implementing different Optimization algorithms. Additionally, different types of data loaders (for different batch sizes) are included, such as **SimpleLoader**, **MiniBatch_Loader**, and **Batch_Loader**.Different types of losses(criterions) are implemented too .
 
 ## Components
 
