@@ -49,6 +49,7 @@ This repository demonstrates a simple implementation of a neural network with su
 - **SGD (Stochastic Gradient Descent)**: Updates the weights after processing each individual training example.
   
 - **MBGD (Mini-Batch Gradient Descent)**: A hybrid approach that updates weights after processing a mini-batch of training examples.
+- **SGDM (Stochastic Gradient Descent with MoMENTUM)**: This approach updates the weights of training examples by incorporating a memory system that tracks the optimization directions. By factoring in past gradients with a momentum term, it helps stabilize the process and accelerates convergence. The momentum term determines the influence of previous gradients on the current update, guiding the optimization toward a more efficient path.
 
 ### 5. **Training Function**
 

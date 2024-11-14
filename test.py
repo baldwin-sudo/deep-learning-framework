@@ -1,7 +1,7 @@
 from Layers import Dense
 from DataLoader import SimpleLoader, Batch_Loader, MiniBatch_Loader
 from Activations import relu, sigmoid
-from Optimizers import SGD, MBGD, Batch_GD
+from Optimizers import SGD, MBGD, Batch_GD,SGDM
 from Criterions import MSE,BinaryCrossEntropy
 from NeuralNetwork import Network
 import numpy as np 
@@ -67,9 +67,9 @@ def test():
     network.reset_network()
 
     # Test with SimpleLoader and SGD
-    print("\nTesting with SimpleLoader (stochastic iteration) and SGD optimizer:")
+    print("\nTesting with SimpleLoader (stochastic iteration) and SGDM optimizer:")
     simple_loader = SimpleLoader((X, Y), shuffle=True)
-    sgd_optimizer = SGD(learning_rate=0.1, neural_network=network)
+    sgd_optimizer = SGDM(learning_rate=0.1, neural_network=network,batch_size=1)
     train_with_dataloader(simple_loader, network, sgd_optimizer, criterion)
 
     network.reset_network()
@@ -79,5 +79,5 @@ def test():
     batch_loader = Batch_Loader((X, Y), shuffle=True)
     batch_gd_optimizer = Batch_GD(learning_rate=0.001, neural_network=network, len_data=len(X))
     train_with_dataloader(batch_loader, network, batch_gd_optimizer, criterion,epochs=10000)
-
+    
 test()
