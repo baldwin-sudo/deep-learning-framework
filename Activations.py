@@ -2,8 +2,10 @@ import numpy as np
 
 def sigmoid():
     def _sigmoid(x):
+        x = np.clip(x, -709, 709)  # Clip to avoid overflow (exp(709) is near the limit of floating-point
         return 1/(1+np.exp(-x))
     def _d_sigmoid(x):
+        x = np.clip(x, -709, 709)  # Clip to avoid overflow (exp(709) is near the limit of floating-point
         return _sigmoid(x)*(1-_sigmoid(x))
     # returns both activation,and its deriviative
     return _sigmoid,_d_sigmoid

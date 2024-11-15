@@ -24,8 +24,8 @@ class MSE(Criterion):
         return np.mean(step_error)
     def step_d_error(self,y,y_pred):
         step_d_error=-2*(y-y_pred)
-        
-        return np.mean(step_d_error)
+        return step_d_error
+        # return np.mean(step_d_error)
     
 class BinaryCrossEntropy(Criterion):
     def __init__(self) -> None:

@@ -19,14 +19,14 @@ class Batch_GD(Optimizer):
             #here batchsize == len(data)
         if step % self.batch_size == 0 :
             self.batch_step(error)
-    def batch_step(self, batch_error):
+    def batch_step(self, batch_d_error):
         """Updates weights for a full batch of training examples."""
         layers_reversed = list(reversed(self.nn.layers))
         for layer in layers_reversed:
-            grad,dW,dB = layer.backward(batch_error)
+            grad,dW,dB = layer.backward(batch_d_error)
             layer.weights -=dW *self.lr
             layer.bias -=dB *self.lr
-            batch_error = grad
+            batch_d_error = grad
 
 
 
@@ -36,14 +36,14 @@ class SGD(Optimizer):
     def __init__(self, learning_rate, neural_network) -> None:
         super().__init__(learning_rate, neural_network)
 
-    def step(self,batch_error, step=None):
+    def step(self,batch_d_error, step=None):
         # In SGD, we update the weights for each individual data point.
         layers_reversed = list(reversed(self.nn.layers))
         for layer in layers_reversed:
-            grad,dW,dB = layer.backward(batch_error)
+            grad,dW,dB = layer.backward(batch_d_error)
             layer.weights -=dW *self.lr
             layer.bias -=dB *self.lr
-            batch_error = grad
+            batch_d_error = grad
 
 
 class MBGD(Optimizer):
@@ -51,15 +51,15 @@ class MBGD(Optimizer):
     def __init__(self, learning_rate, neural_network, batch_size) -> None:
         super().__init__(learning_rate, neural_network, batch_size)
 
-    def step(self, batch_error, step=None):
+    def step(self, batch_d_error, step=None):
         # In Mini-Batch GD, we update weights after a mini-batch is processed.
         if step is None or step % self.batch_size == 0:
             layers_reversed = list(reversed(self.nn.layers))
             for layer in layers_reversed:
-                grad,dW,dB = layer.backward(batch_error)
+                grad,dW,dB = layer.backward(batch_d_error)
                 layer.weights -=dW *self.lr
                 layer.bias -=dB *self.lr
-                batch_error = grad
+                batch_d_error = grad
 class SGDM(Optimizer) :
     def __init__(self, learning_rate, neural_network, batch_size=None,momentum=0.9) -> None:
         """
@@ -79,11 +79,11 @@ class SGDM(Optimizer) :
             self.layer_velocity_weights.append(np.zeros_like(layer.weights))
             self.layer_velocity_bias.append(np.zeros_like(layer.bias))
         
-    def step(self, batch_error, step=None):
+    def step(self, batch_d_error, step=None):
         if step is None or step % self.batch_size == 0:
             layers_reversed = list(reversed(self.nn.layers))
             for i,layer in enumerate(layers_reversed):
-                grad,dW,dB = layer.backward(batch_error)
+                grad,dW,dB = layer.backward(batch_d_error)
                 # update velocities
                 self.layer_velocity_weights[i] = self.momentum * self.layer_velocity_weights[i] + (1-self.momentum)*dW
                 self.layer_velocity_bias[i] = self.momentum * self.layer_velocity_bias[i] + (1-self.momentum)*dB
@@ -91,4 +91,26 @@ class SGDM(Optimizer) :
                 layer.weights -=self.layer_velocity_weights[i] *self.lr
                 layer.bias -=self.layer_velocity_bias[i] *self.lr
                 # propagate error :
-                batch_error = grad
+                batch_d_error = grad
+
+class NAG(SGDM):
+    # NESTROV ACCElerated Moment
+    def __init__(self, learning_rate, neural_network, batch_size=None, momentum=0.9) -> None:
+        super().__init__(learning_rate, neural_network, batch_size, momentum)
+    def step(self, batch_d_error, step=None):
+        if step is None or step % self.batch_size == 0:
+            layers_reversed = list(reversed(self.nn.layers))
+            for i,layer in enumerate(layers_reversed):
+                # update weights :
+                layer.weights -=self.layer_velocity_weights[i]*self.momentum
+                layer.bias -=self.layer_velocity_bias[i] *self.momentum
+                #calculate error after making step :
+                grad,dW,dB = layer.backward(batch_d_error)
+                # update nestrov velocities
+                # here the dW is the gradient of the (current weights-beta*previous gradients)
+                self.layer_velocity_weights[i] = self.momentum * self.layer_velocity_weights[i] + self.lr*dW
+                self.layer_velocity_bias[i] = self.momentum * self.layer_velocity_bias[i] + self.lr*dB
+                
+                layer.weights -=self.layer_velocity_weights[i]
+                layer.bias -=self.layer_velocity_bias[i]
+                batch_d_error = grad

@@ -50,6 +50,10 @@ This repository demonstrates a simple implementation of a neural network with su
   
 - **MBGD (Mini-Batch Gradient Descent)**: A hybrid approach that updates weights after processing a mini-batch of training examples.
 - **SGDM (Stochastic Gradient Descent with Momentum)**: This approach updates the weights of training examples by incorporating a memory system that tracks the optimization directions. By factoring in past gradients with a momentum term, it helps stabilize the process and accelerates convergence. The momentum term determines the influence of previous gradients on the current update, guiding the optimization toward a more efficient path.
+<<<<<<< HEAD
+=======
+- **NAG (Nestrov Accelerated Gradient Descent with Momentum)**: Building on SGD with momentum, NAG introduces a "lookahead" mechanism to anticipate the direction of the optimization path. Instead of calculating gradients based on the current weights, it computes them at a "lookahead" position, which is estimated by applying a step in the direction of the momentum (i.e., the weighted sum of previous gradients). This approach allows NAG to correct its course more proactively by adjusting for the anticipated future position, resulting in smoother convergence and reduced oscillations. In essence, NAG minimizes errors before fully committing to a step, leading to more efficient and precise updates.The idea being that it is better to correct a mistake after you have made it.
+>>>>>>> 8227892 ( added nestrov accelerated moment(optimizer))
 
 ### 5. **Training Function**
 
